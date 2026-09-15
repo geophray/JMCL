@@ -1,0 +1,38 @@
+{
+  "$comment": [
+    "Which XML containers may have their child elements sorted, and by what key.",
+    "",
+    "This is an ALLOWLIST on purpose. Dataverse exports some collections in a",
+    "non-deterministic order (harmless to sort) and others in a meaningful one",
+    "(destructive to sort). Form layout, ribbon definitions and sitemap ordering",
+    "are positional: sorting them changes what the user sees, or breaks import.",
+    "Anything not listed here is left exactly as exported.",
+    "",
+    "container : XPath selecting the parent element whose children get sorted.",
+    "child     : element name to sort. Other children are left in place.",
+    "keys      : ordered list of sort keys, tried in order. A key is either",
+    "            '@attribute' or a child element name. Elements missing every",
+    "            key sort by their own XML, which is stable but arbitrary.",
+    "",
+    "Add rules cautiously, and confirm with a round trip against a real",
+    "environment that the solution still imports before trusting a new one."
+  ],
+
+  "neverDescendInto": [
+    "FormXml", "RibbonDiffXml", "SiteMapXml", "RibbonXml",
+    "IntroducedVersion", "ClientRibbonDiffXml"
+  ],
+
+  "rules": [
+    { "container": "//Entities",           "child": "Entity",             "keys": ["Name"] },
+    { "container": "//attributes",          "child": "attribute",          "keys": ["@PhysicalName", "Name"] },
+    { "container": "//EntityRelationships", "child": "EntityRelationship", "keys": ["@Name", "Name"] },
+    { "container": "//OptionSets",          "child": "optionset",          "keys": ["@Name", "@localizedName"] },
+    { "container": "//Roles",               "child": "Role",               "keys": ["@name", "@id"] },
+    { "container": "//Workflows",           "child": "Workflow",           "keys": ["@Name", "@WorkflowId"] },
+    { "container": "//WebResources",        "child": "WebResource",        "keys": ["Name", "@Name"] },
+    { "container": "//SavedQueries",        "child": "savedquery",         "keys": ["savedqueryid", "@savedqueryid"] },
+    { "container": "//RootComponents",      "child": "RootComponent",      "keys": ["@schemaName", "@id"] },
+    { "container": "//MissingDependencies", "child": "MissingDependency",  "keys": ["@schemaName", "@id"] }
+  ]
+}

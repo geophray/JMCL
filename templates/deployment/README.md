@@ -76,6 +76,30 @@ git diff                                  # review before committing
 Secrets come from the pipeline's secret store as parameters. They are never
 written to a settings file.
 
+## Solution XML normalization
+
+Dataverse exports the children of several collections in a non-deterministic
+order. Export twice with no changes and git still reports a large diff, which
+makes "review before committing" advice nobody can follow.
+
+`Export-Solution.ps1` runs `Normalize-SolutionXml.ps1` automatically after
+unpack. You can also run it directly, and CI can assert it:
+
+```powershell
+./scripts/Normalize-SolutionXml.ps1            # normalize in place
+./scripts/Normalize-SolutionXml.ps1 -Verify    # exit non-zero if not normalized
+```
+
+**It sorts an allowlist, never everything.** Some solution XML ordering is
+positional and meaningful: form layout, ribbon definitions and sitemap ordering
+all change behaviour if reordered. `settings/normalization.json` names the
+containers that may be sorted and the keys to sort them by, and lists regions
+the normalizer will not descend into even when a rule matches inside them.
+Anything unlisted is left exactly as exported.
+
+Add rules cautiously, and confirm with a round trip against a real environment
+that the solution still imports before trusting a new one.
+
 ## Choices worth knowing
 
 **The unpacked folder is the source of truth, not the zip.** A committed zip

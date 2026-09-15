@@ -31,11 +31,14 @@ exactly those without it.
 
 ## Deliberately not carried forward yet, in priority order
 
-1. **Solution XML normalization.** Dataverse exports child nodes in
-   non-deterministic order, so an export with no real changes still produces a
-   large diff. The prior estate solves this with a sort pass over the unpacked
-   XML. Without it, review is impractical and "review the diff before
-   committing" is advice nobody can follow. **This is the highest-value gap.**
+1. ~~Solution XML normalization.~~ **Done.**
+   `scripts/Normalize-SolutionXml.ps1` with `settings/normalization.json`.
+   Written from the problem rather than ported, and deliberately an allowlist:
+   form layout, ribbon and sitemap ordering are positional, so a
+   sort-everything normalizer would silently change behaviour or break import.
+   The algorithm was validated against a synthetic export covering sorted
+   containers, a protected `FormXml` region, and a second pass proving
+   idempotency. `-Verify` makes it assertable in CI.
 
 2. **Multiple solutions per repository, with import ordering.** This template
    assumes one solution. Real repositories carry several, and dependency
@@ -62,7 +65,13 @@ exactly those without it.
 
 ## Decision
 
-Ship the single-solution round trip now, and treat items 1 through 3 as
-required before this template is used on a real project. Item 1 first: without
-normalization, every other workflow here produces diffs no one can review, and
-the value of source-controlling a solution largely evaporates.
+Ship the single-solution round trip with normalization now. Treat multiple
+solutions and the configuration/test data split as required before this
+template is used on a real project.
+
+Normalization's allowlist is a hypothesis until a real export exercises it. The
+rule set was written from knowledge of the format, not from a solution in hand,
+so the first real round trip should confirm two things: that the listed
+containers actually appear with the expected keys, and that the solution still
+imports after normalization. Until then, treat `settings/normalization.json` as
+a starting point rather than a verified configuration.

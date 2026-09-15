@@ -57,4 +57,9 @@ if (Test-Path $mapping) { $unpack += @('--map', $mapping) }
 
 Invoke-Pac @unpack
 
-Write-Host "Unpacked to $source. Review with git diff before committing." -ForegroundColor Green
+# Normalize before the developer ever sees the diff. Dataverse orders several
+# collections non-deterministically, so without this an export with no real
+# changes still produces a large diff and review becomes impossible.
+& "$PSScriptRoot/Normalize-SolutionXml.ps1" -Path $source
+
+Write-Host "Unpacked and normalized to $source. Review with git diff before committing." -ForegroundColor Green
