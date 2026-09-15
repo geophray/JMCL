@@ -1,0 +1,20 @@
+<Project>
+  <!--
+    Intentionally does NOT import the repository Directory.Build.props.
+
+    This project must behave like an OUTSIDE consumer of the JMCL packages, not
+    like a project inside the repository. Inheriting central package management
+    and the repo-wide settings would let it succeed for reasons a real consumer
+    would not have.
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <!--
+      The JMCL version under test. Versions come from git tags via MinVer, so
+      hardcoding one here guarantees a mismatch the moment the tag moves.
+      build/verify.sh passes the real value; this default only keeps the project
+      evaluatable when built by hand.
+    -->
+    <JmclVersion Condition="'$(JmclVersion)' == ''">0.0.0-alpha.0.1</JmclVersion>
+  </PropertyGroup>
+</Project>

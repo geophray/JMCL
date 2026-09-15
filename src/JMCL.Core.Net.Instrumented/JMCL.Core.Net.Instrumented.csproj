@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Core.Net</RootNamespace>
+    <AssemblyName>JMCL.Core.Net.Instrumented</AssemblyName>
+    <PackageId>JMCL.Core.Net.Instrumented</PackageId>
+    <Title>JMCL.Core.Net.Instrumented</Title>
+    <Description>Net abstraction decorated with dependency telemetry capture.</Description>
+    <PackageTags>http;telemetry;instrumentation</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.Net\JMCL.Core.Net.csproj" />
+    <ProjectReference Include="..\JMCL.Telemetry\JMCL.Telemetry.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.Sdk.Utilities.Search</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.Search</AssemblyName>
+    <PackageId>JMCL.Dataverse.Search</PackageId>
+    <Title>JMCL.Dataverse.Search</Title>
+    <Description>Dataverse search helpers.</Description>
+    <PackageTags>dataverse;powerplatform;search</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.IocContainer\JMCL.Core.IocContainer.csproj" />
+    <ProjectReference Include="..\JMCL.Core.ProcessModel\JMCL.Core.ProcessModel.csproj" />
+    <ProjectReference Include="..\JMCL.Dataverse.Sdk\JMCL.Dataverse.Sdk.csproj" />
+    <ProjectReference Include="..\JMCL.Dataverse.Data\JMCL.Dataverse.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+  </ItemGroup>
+
+</Project>

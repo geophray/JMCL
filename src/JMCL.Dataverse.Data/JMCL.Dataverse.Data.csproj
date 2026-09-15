@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.Sdk.Data</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.Data</AssemblyName>
+    <PackageId>JMCL.Dataverse.Data</PackageId>
+    <Title>JMCL.Dataverse.Data</Title>
+    <Description>Fluent Dataverse query builder and entity proxies.</Description>
+    <PackageTags>dataverse;powerplatform;query;fluent</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.IocContainer\JMCL.Core.IocContainer.csproj" />
+    <ProjectReference Include="..\JMCL.Core.ProcessModel\JMCL.Core.ProcessModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+  </ItemGroup>
+
+</Project>

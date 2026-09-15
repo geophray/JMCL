@@ -1,0 +1,16 @@
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+artifacts/
+local-feed/*
+!local-feed/.gitkeep
+TestResults/
+.DS_Store
+*.snk
+!*.public.snk
+__pycache__/
+*.pyc

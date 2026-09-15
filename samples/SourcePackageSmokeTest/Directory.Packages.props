@@ -1,0 +1,16 @@
+<Project>
+  <!--
+    Stops the walk-up to the repository Directory.Packages.props.
+
+    NuGet discovers Directory.Packages.props independently of
+    Directory.Build.props, so setting ManagePackageVersionsCentrally=false in
+    the sibling file is not enough: the repository file is found first and turns
+    it back on. Nearest file wins, so this one has to exist.
+
+    A real outside consumer would not inherit this repository's central package
+    management, and this project has to behave like a real outside consumer.
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

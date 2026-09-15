@@ -1,0 +1,17 @@
+<Project>
+
+  <!--
+    Repository-wide targets. Kept separate from Directory.Build.props because
+    these run after project files are evaluated.
+  -->
+
+  <PropertyGroup>
+    <!--
+      The upstream defined a CCLLC_ASSEMBLY constant in three .targets files and
+      never referenced it from a single line of C#. It is deliberately not
+      carried forward. If a real need for an assembly/source build distinction
+      appears, define it here with a comment explaining what consumes it.
+    -->
+  </PropertyGroup>
+
+</Project>

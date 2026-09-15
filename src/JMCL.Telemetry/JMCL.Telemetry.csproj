@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Telemetry</RootNamespace>
+    <AssemblyName>JMCL.Telemetry</AssemblyName>
+    <PackageId>JMCL.Telemetry</PackageId>
+    <Title>JMCL.Telemetry</Title>
+    <Description>Sandbox-safe telemetry that is wire compatible with Application Insights, usable from inside the Dataverse plug-in sandbox where the Application Insights SDK cannot load.</Description>
+    <PackageTags>telemetry;applicationinsights;observability;dataverse</PackageTags>
+  </PropertyGroup>
+
+</Project>

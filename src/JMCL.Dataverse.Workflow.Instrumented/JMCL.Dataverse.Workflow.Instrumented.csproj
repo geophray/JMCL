@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.Sdk.Workflow</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.Workflow.Instrumented</AssemblyName>
+    <PackageId>JMCL.Dataverse.Workflow.Instrumented</PackageId>
+    <Title>JMCL.Dataverse.Workflow.Instrumented</Title>
+    <Description>Custom workflow activity base with external telemetry capture.</Description>
+    <PackageTags>dataverse;powerplatform;workflow;telemetry</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Dataverse.Workflow\JMCL.Dataverse.Workflow.csproj" />
+    <ProjectReference Include="..\JMCL.Dataverse.Sdk.Instrumented\JMCL.Dataverse.Sdk.Instrumented.csproj" />
+    <ProjectReference Include="..\JMCL.Telemetry\JMCL.Telemetry.csproj" />
+    <ProjectReference Include="..\JMCL.Core.Net.Instrumented\JMCL.Core.Net.Instrumented.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.Workflow" />
+  </ItemGroup>
+
+</Project>

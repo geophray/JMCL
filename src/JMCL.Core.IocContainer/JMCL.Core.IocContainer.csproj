@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Core</RootNamespace>
+    <AssemblyName>JMCL.Core.IocContainer</AssemblyName>
+    <PackageId>JMCL.Core.IocContainer</PackageId>
+    <Title>JMCL.Core.IocContainer</Title>
+    <Description>A lightweight inversion of control container that runs inside the Dataverse plugin sandbox.</Description>
+    <PackageTags>dataverse;powerplatform;ioc;dependency-injection</PackageTags>
+  </PropertyGroup>
+
+</Project>

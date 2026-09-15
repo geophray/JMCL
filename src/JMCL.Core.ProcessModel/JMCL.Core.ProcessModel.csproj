@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Core</RootNamespace>
+    <AssemblyName>JMCL.Core.ProcessModel</AssemblyName>
+    <PackageId>JMCL.Core.ProcessModel</PackageId>
+    <Title>JMCL.Core.ProcessModel</Title>
+    <Description>Platform-agnostic process execution context for business logic that must run identically in a Dataverse plug-in, an Azure Function, or a test harness.</Description>
+    <PackageTags>dataverse;powerplatform;process-model;abstraction</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.IocContainer\JMCL.Core.IocContainer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == '$(PortableTargetFramework)'">
+    <PackageReference Include="System.Runtime.Caching" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == '$(PluginTargetFramework)'">
+    <Reference Include="System.Runtime.Caching" />
+  </ItemGroup>
+
+</Project>

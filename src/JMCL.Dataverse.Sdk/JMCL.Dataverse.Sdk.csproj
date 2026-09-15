@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.Sdk</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.Sdk</AssemblyName>
+    <PackageId>JMCL.Dataverse.Sdk</PackageId>
+    <Title>JMCL.Dataverse.Sdk</Title>
+    <Description>Dataverse plug-in framework: typed event registration, execution context, enhanced organization service, environment variable settings.</Description>
+    <PackageTags>dataverse;powerplatform;plugin;framework</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.IocContainer\JMCL.Core.IocContainer.csproj" />
+    <ProjectReference Include="..\JMCL.Core.ProcessModel\JMCL.Core.ProcessModel.csproj" />
+    <ProjectReference Include="..\JMCL.Core.Net\JMCL.Core.Net.csproj" />
+    <ProjectReference Include="..\JMCL.Dataverse.Data\JMCL.Dataverse.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+</Project>

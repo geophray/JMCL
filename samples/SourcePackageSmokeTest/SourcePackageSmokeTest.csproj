@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Smoke test for the .Sources packaging path. Not part of the solution: it
+    cannot restore until "python3 build/pack-sources.py" has populated local-feed.
+
+    What it proves, and nothing more:
+      1. contentFiles with buildAction="Compile" actually reaches the compiler
+         under PackageReference, rather than landing as inert content the way
+         the upstream's content/App_Packages layout does.
+      2. The documented closure is complete and correct. NuGet does NOT flow
+         contentFiles transitively, so every .Sources package in the graph must
+         be a DIRECT PackageReference. This list is produced by the closure
+         option of build/pack-sources.py for component Dataverse.Sdk.
+      3. No duplicate types, meaning the source packages really do depend on
+         other source packages rather than on the assembly packages.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SourcePackageSmokeTest</AssemblyName>
+    <RootNamespace>SourcePackageSmokeTest</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <LangVersion>9.0</LangVersion>
+    <!-- A duplicate type would be CS0436, a warning. Here it must fail the build. -->
+    <WarningsAsErrors>$(WarningsAsErrors);CS0436</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+<PackageReference Include="JMCL.Dataverse.Sdk.Sources" Version="$(JmclVersion)" />
+    <PackageReference Include="JMCL.Core.IocContainer.Sources" Version="$(JmclVersion)" />
+    <PackageReference Include="JMCL.Core.ProcessModel.Sources" Version="$(JmclVersion)" />
+    <PackageReference Include="JMCL.Core.Net.Sources" Version="$(JmclVersion)" />
+    <PackageReference Include="JMCL.Dataverse.Data.Sources" Version="$(JmclVersion)" />
+  </ItemGroup>
+
+</Project>

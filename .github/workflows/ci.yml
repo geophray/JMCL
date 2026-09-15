@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    # Windows because the net462 leg cannot be EXECUTED elsewhere: there is no
+    # .NET Framework runtime on Linux or macOS. Compilation works anywhere via
+    # Microsoft.NETFramework.ReferenceAssemblies; running the tests does not.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # MinVer derives the version from git history. A shallow clone
+          # produces a wrong version with no error at all.
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # Deliberately the same script developers run locally. When CI and local
+      # verification drift apart, CI stops being evidence about the thing you
+      # are shipping. Git Bash is present on the Windows runners, and the script
+      # runs both target frameworks there rather than skipping net462.
+      - name: Verify
+        shell: bash
+        run: ./build/verify.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: local-feed/*.nupkg
+          if-no-files-found: error
+
+  publish:
+    # Only a tag publishes. main is always releasable but never auto-released.
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: verify
+    runs-on: windows-latest
+    environment: nuget
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: local-feed
+
+      - uses: actions/setup-dotnet@v4
+
+      - name: Push to nuget.org
+        # No --skip-duplicate. The upstream pipelines set allowPackageConflicts
+        # true, which silently accepted a re-push of an existing version and hid
+        # mistakes. A duplicate here should fail loudly.
+        #
+        # The feed is still an open decision, so a tag can legitimately exist
+        # before anywhere to publish does. Refuse clearly rather than failing
+        # with an auth error that reads like a broken pipeline.
+        shell: bash
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [[ -z "${NUGET_API_KEY}" ]]; then
+            echo "::error::No NUGET_API_KEY secret is configured, so this tag cannot publish."
+            echo "Set the secret, or delete the tag if it was not meant to release."
+            exit 1
+          fi
+          dotnet nuget push "local-feed/*.nupkg" \
+            --source https://api.nuget.org/v3/index.json \
+            --api-key "${NUGET_API_KEY}"

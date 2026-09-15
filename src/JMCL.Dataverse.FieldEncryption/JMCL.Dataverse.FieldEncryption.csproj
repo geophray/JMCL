@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.FieldEncryption</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.FieldEncryption</AssemblyName>
+    <PackageId>JMCL.Dataverse.FieldEncryption</PackageId>
+    <Title>JMCL.Dataverse.FieldEncryption</Title>
+    <Description>Field level encryption for Dataverse columns.</Description>
+    <PackageTags>dataverse;powerplatform;encryption</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.Encryption\JMCL.Core.Encryption.csproj" />
+    <ProjectReference Include="..\JMCL.Core.IocContainer\JMCL.Core.IocContainer.csproj" />
+    <ProjectReference Include="..\JMCL.Core.ProcessModel\JMCL.Core.ProcessModel.csproj" />
+    <ProjectReference Include="..\JMCL.Core.Net\JMCL.Core.Net.csproj" />
+    <ProjectReference Include="..\JMCL.Core.RestClient\JMCL.Core.RestClient.csproj" />
+    <ProjectReference Include="..\JMCL.Core.Serialization\JMCL.Core.Serialization.csproj" />
+    <ProjectReference Include="..\JMCL.Azure.Secrets\JMCL.Azure.Secrets.csproj" />
+    <ProjectReference Include="..\JMCL.Dataverse.Sdk\JMCL.Dataverse.Sdk.csproj" />
+    <ProjectReference Include="..\JMCL.Dataverse.Data\JMCL.Dataverse.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+  </ItemGroup>
+
+</Project>

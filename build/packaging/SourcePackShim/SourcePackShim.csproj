@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A vehicle for packing the generated .Sources nuspecs. It contributes no
+    content: the nuspec supplies every file and all metadata.
+
+    Why it exists: "dotnet pack -p:NuspecFile=..." against a MULTI-TARGETED
+    project returns exit code 0 and silently produces no package. The nuspec
+    pack path runs in the outer build, which does not happen the same way once
+    TargetFrameworks is plural. Every JMCL library is multi-targeted or was
+    built from a multi-targeted template, so packing them directly produced
+    eighteen silent no-ops.
+
+    Single TargetFramework, and it deliberately does not inherit the repository
+    Directory.Build.props (see the empty Directory.Build.props beside it), so
+    nothing about the repo's build can reintroduce the problem.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>true</IsPackable>
+    <!-- NU5128: no lib/ref assemblies for the declared framework. Expected: a
+         source package ships .cs files, not assemblies. -->
+    <NoWarn>NU5128</NoWarn>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Azure.Authentication</RootNamespace>
+    <AssemblyName>JMCL.Azure.Authentication</AssemblyName>
+    <PackageId>JMCL.Azure.Authentication</PackageId>
+    <Title>JMCL.Azure.Authentication</Title>
+    <Description>OAuth2 authentication, including V2 flows, for reaching Azure services from constrained hosts.</Description>
+    <PackageTags>azure;oauth2;authentication</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.Net\JMCL.Core.Net.csproj" />
+    <ProjectReference Include="..\JMCL.Core.RestClient\JMCL.Core.RestClient.csproj" />
+    <ProjectReference Include="..\JMCL.Core.Serialization\JMCL.Core.Serialization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == '$(PluginTargetFramework)'">
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == '$(PluginTargetFramework)'">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+</Project>

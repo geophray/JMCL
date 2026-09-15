@@ -1,0 +1,12 @@
+using Microsoft.Xrm.Sdk.Query;
+
+namespace JMCL.Dataverse.Sdk.Utilities.Search
+{
+    public interface ISearchQuerySignature
+    {
+        LogicalOperator FilterOperator { get; }
+        bool RequireQuickFind { get; }
+
+        bool Test(FilterExpression filter);
+    }
+}

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Core</RootNamespace>
+    <AssemblyName>JMCL.Core.Encryption</AssemblyName>
+    <PackageId>JMCL.Core.Encryption</PackageId>
+    <Title>JMCL.Core.Encryption</Title>
+    <Description>SHA256 hashing helper. Name inherited from upstream and under review.</Description>
+    <PackageTags>hashing;sha256</PackageTags>
+  </PropertyGroup>
+
+</Project>

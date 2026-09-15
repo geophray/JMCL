@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.Sdk.Metadata</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.Metadata</AssemblyName>
+    <PackageId>JMCL.Dataverse.Metadata</PackageId>
+    <Title>JMCL.Dataverse.Metadata</Title>
+    <Description>Dataverse metadata proxies and message metadata.</Description>
+    <PackageTags>dataverse;powerplatform;metadata</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Dataverse.Sdk\JMCL.Dataverse.Sdk.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,53 @@
+JMCL Power Platform Code Libraries
+Copyright (c) 2026 Jeff Maughan
+
+================================================================================
+Derived work
+================================================================================
+
+This project is a fork of the Power Platform code libraries created by
+Scott Colson, licensed under the MIT License, Copyright (c) 2020-2022
+Scott Colson. The full MIT text is in LICENSE.
+
+The code has been renamed, restructured, and modernized. Architectural
+credit for the process model, the sandbox-safe IoC container, the plugin
+event registration model, and the Application Insights compatible telemetry
+implementation belongs to Scott Colson.
+
+Upstream sources, pinned at the following commits:
+
+  Public (github.com/ScottColson)
+    CCLLCCodeLibraries        b477916   2020-11-22
+    CCLLC.CDS.Sdk             88162a6   2023-09-27
+    CCLLC.CDS.Sdk.Data        98d65ff   2022-02-23
+
+  Colson's later work, which he continued in a private Azure DevOps
+  collection rather than on GitHub. Each repository carries its own MIT
+  LICENSE with Scott Colson as copyright holder, and where the two overlap
+  the commit hashes are identical to the public repositories above. Last
+  upstream commit by component:
+
+    Core.Libraries            2020-11-22   (same code state as CCLLCCodeLibraries)
+    Dataverse.Sdk             2023-09-27   (same code state as CCLLC.CDS.Sdk)
+    Dataverse.Sdk.Data        2022-02-23   (same code state as CCLLC.CDS.Sdk.Data)
+    Core.IocContainer         2021-06-10   (ahead of the monorepo)
+    Core.Net                  2021-09-15   (ahead of the monorepo)
+    Dataverse.SearchUtilities 2021-01-28
+    Azure.Authentication      2024-03-26
+    Azure.Secrets             2020-04-30
+    Dataverse.FieldEncryption 2020-04-30
+    Dataverse.ProxyGenerator  2021-05-20
+    Dataverse.DevOps.PowerShell 2022-11-28
+
+================================================================================
+Third party lineage
+================================================================================
+
+JMCL.Telemetry (when added) originates from Colson's sandbox-safe
+reimplementation of a subset of the Microsoft Application Insights .NET SDK
+(github.com/Microsoft/ApplicationInsights-dotnet, MIT). The extent to which
+it is reimplemented rather than copied is to be confirmed and this notice
+updated accordingly.
+
+The IoC container implementation is credited in its source comments to work
+by Ken Egozi.

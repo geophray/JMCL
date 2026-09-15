@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Core.RestClient</RootNamespace>
+    <AssemblyName>JMCL.Core.RestClient</AssemblyName>
+    <PackageId>JMCL.Core.RestClient</PackageId>
+    <Title>JMCL.Core.RestClient</Title>
+    <Description>POCO based REST client built on the Net and Serialization abstractions.</Description>
+    <PackageTags>rest;http;client</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Core.Net\JMCL.Core.Net.csproj" />
+    <ProjectReference Include="..\JMCL.Core.Serialization\JMCL.Core.Serialization.csproj" />
+  </ItemGroup>
+
+</Project>

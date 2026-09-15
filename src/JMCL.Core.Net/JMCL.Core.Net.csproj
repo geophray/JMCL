@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Core.Net</RootNamespace>
+    <AssemblyName>JMCL.Core.Net</AssemblyName>
+    <PackageId>JMCL.Core.Net</PackageId>
+    <Title>JMCL.Core.Net</Title>
+    <Description>Testable HTTP request abstraction. Wraps the platform web request so calling code can be unit tested against a mock.</Description>
+    <PackageTags>http;webrequest;testability</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == '$(PluginTargetFramework)'">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+</Project>

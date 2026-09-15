@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework);$(PortableTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Core.Serialization</RootNamespace>
+    <AssemblyName>JMCL.Core.Serialization</AssemblyName>
+    <PackageId>JMCL.Core.Serialization</PackageId>
+    <Title>JMCL.Core.Serialization</Title>
+    <Description>Standardized JSON and XML serialization over DataContract serializers.</Description>
+    <PackageTags>serialization;json;xml;datacontract</PackageTags>
+  </PropertyGroup>
+
+</Project>

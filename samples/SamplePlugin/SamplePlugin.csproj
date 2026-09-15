@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A real Dataverse plug-in assembly built against the JMCL ASSEMBLY packages.
+
+    This is the plug-in package path: the plug-in references JMCL normally and
+    the dependent assemblies travel with it in the package uploaded at
+    registration. Contrast samples/SourcePackageSmokeTest, which exercises the
+    source distribution path needed for custom workflow activities and
+    on-premises, where plug-in packages are not supported.
+
+    Not in the solution: it cannot restore until local-feed is populated by
+    "dotnet pack -c Release -o local-feed".
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <AssemblyName>JMCL.Samples.Plugins</AssemblyName>
+    <RootNamespace>JMCL.Samples.Plugins</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <LangVersion>9.0</LangVersion>
+    <WarningsAsErrors>$(WarningsAsErrors);CS0436</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="JMCL.Dataverse.Sdk" Version="$(JmclVersion)" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.Sdk.Workflow</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.Workflow</AssemblyName>
+    <PackageId>JMCL.Dataverse.Workflow</PackageId>
+    <Title>JMCL.Dataverse.Workflow</Title>
+    <Description>Custom workflow activity framework built on the Dataverse SDK abstractions.</Description>
+    <PackageTags>dataverse;powerplatform;workflow</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Dataverse.Sdk\JMCL.Dataverse.Sdk.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.Workflow" />
+  </ItemGroup>
+
+</Project>

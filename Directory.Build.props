@@ -1,0 +1,116 @@
+<Project>
+
+  <!--
+    Repository-wide build settings. Every project inherits these.
+    Project-specific values (PackageId, Description) live in the project file.
+  -->
+
+  <PropertyGroup Label="Identity">
+    <Product>JMCL Power Platform Code Libraries</Product>
+    <Company>Jeff Maughan</Company>
+    <Authors>Jeff Maughan</Authors>
+    <Copyright>Copyright (c) 2026 Jeff Maughan. Portions copyright (c) 2020 Scott Colson.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup Label="TargetFrameworks">
+    <!--
+      Centralized so a platform-mandated bump is one edit, not one per project.
+
+      PluginTargetFramework is what the Dataverse sandbox accepts. Microsoft
+      documents net462 and has published no roadmap for moving plug-ins off
+      .NET Framework. Note that .NET Framework 4.x is a single in-place-updated
+      runtime, so net462 describes the compile-time reference surface, not a
+      4.6.2 runtime on the server. .NET Framework 4.6.2 itself leaves support on
+      2027-01-13; the plausible near-term change is Microsoft raising the
+      accepted target to net472 or net48, which this property absorbs in one line.
+
+      PortableTargetFramework is the current LTS. .NET 8 and 9 both leave
+      support on 2026-11-10; .NET 10 is supported to 2028-11-14. It is for
+      libraries with no platform dependency, so
+      they are also consumable from Azure Functions, APIs and tooling, and so
+      their tests can execute on a machine without the .NET Framework runtime.
+    -->
+    <PluginTargetFramework>net462</PluginTargetFramework>
+    <PortableTargetFramework>net10.0</PortableTargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Language">
+    <!--
+      Raised from the upstream's 7.3. net462 supports up to C# 9 via the modern
+      compiler. Records (C# 9) additionally need an IsExternalInit shim, which is
+      not present, so do not use init-only setters until one is added.
+    -->
+    <LangVersion>9.0</LangVersion>
+    <!--
+      Deliberately off. Enabling nullable on ported code produces a wall of
+      warnings that would drown real ones. Opt in per project as each is reviewed.
+    -->
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- 1591: missing XML comment. Ported code is not fully documented yet. -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Build">
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Versioning">
+    <!--
+      Versions come from git tags via MinVer. Tag v1.2.0 and every package
+      builds as 1.2.0; an untagged commit gets a deterministic prerelease such
+      as 1.2.1-alpha.0.5.
+
+      Chosen over a pipeline build counter (what the upstream pipelines
+      used) because that divorced the version from the source, which is how
+      the upstream ended up with Core.ProcessModel 1.1.5 pinning
+      IocContainer.Sources 2.0.1 while another repo disagreed. A tag is a
+      commit, so any clone reproduces the same version, and the same version
+      cannot be published twice by accident.
+
+      MinVer needs full history. CI must use fetch-depth 0.
+    -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerDefaultPreReleaseIdentifiers>alpha.0</MinVerDefaultPreReleaseIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup Label="Versioning">
+    <PackageReference Include="MinVer" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup Label="StrongNaming">
+    <!--
+      Standalone Dataverse plugin assemblies must be strong named. Assemblies
+      inside a plugin package do not. Signing is wired up but off until a key
+      exists: generate one, drop it at build/JMCL.snk, and this turns itself on.
+      Keys are gitignored. Do not commit a private key.
+    -->
+    <StrongNameKeyPath>$(MSBuildThisFileDirectory)build\JMCL.snk</StrongNameKeyPath>
+    <SignAssembly Condition="Exists('$(StrongNameKeyPath)')">true</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition="'$(SignAssembly)' == 'true'">$(StrongNameKeyPath)</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup Label="ReadmeForPackages" Condition="'$(IsPackable)' != 'false'">
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Label="NetFrameworkOnLinuxAndMac">
+    <!--
+      Required to build net462 anywhere other than Windows with the .NET
+      Framework targeting packs installed. Harmless on Windows.
+    -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

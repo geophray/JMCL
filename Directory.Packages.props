@@ -1,0 +1,45 @@
+<Project>
+
+  <!--
+    Central package management. One version per dependency for the whole
+    repository. The upstream carried Microsoft.CrmSdk.CoreAssemblies at
+    9.0.2.20, 9.0.2.23, 9.0.2.26 and 9.0.2.42 in different projects; this file
+    is what prevents that recurring.
+  -->
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup Label="Build">
+    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="MinVer" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Platform">
+    <!-- Highest version seen across the upstream repositories. -->
+    <PackageVersion Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.42" />
+    <PackageVersion Include="Microsoft.CrmSdk.Workflow" Version="9.0.2.42" />
+    <!-- Upstream carried 10.0.3 in most places; 13.0.3 addresses CVE-2024-21907. -->
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup Label="Portable shims">
+    <!--
+      In-box on .NET Framework, a package on modern .NET. Referenced only on
+      the portable leg; the plugin leg uses the framework assembly.
+    -->
+    <PackageVersion Include="System.Runtime.Caching" Version="10.0.10" />
+    <!-- In-box on modern .NET; referenced only on the plugin leg. -->
+    <PackageVersion Include="System.Text.Json" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Testing">
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.10.0" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.10.0" />
+  </ItemGroup>
+
+</Project>
