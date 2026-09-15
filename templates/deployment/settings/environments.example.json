@@ -1,0 +1,18 @@
+{
+  "$comment": [
+    "Copy to environments.json, which is gitignored. URLs are not secrets, but",
+    "this file sits next to credentials in people's heads, so it stays out of",
+    "source control to keep that boundary obvious.",
+    "",
+    "Service principal secrets are NEVER stored here. Pipelines pass them from",
+    "a secret store as parameters to Connect-Environment.ps1."
+  ],
+
+  "environments": {
+    "dev":  { "url": "https://contoso-dev.crm.dynamics.com" },
+    "test": { "url": "https://contoso-test.crm.dynamics.com" },
+    "prod": { "url": "https://contoso.crm.dynamics.com" }
+  },
+
+  "tenantId": "00000000-0000-0000-0000-000000000000"
+}

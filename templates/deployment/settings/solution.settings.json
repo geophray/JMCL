@@ -1,0 +1,31 @@
+{
+  "$comment": [
+    "Per-solution settings. Committed. Contains no secrets and no environment URLs.",
+    "Copy this template into a new solution repository and edit the values."
+  ],
+
+  "solutionName": "JmclSampleSolution",
+  "publisherPrefix": "jmcl",
+
+  "paths": {
+    "$comment": "All relative to the repository root.",
+    "solutionSource": "src/solution",
+    "mappingFile": "src/solution/solution.mappings.xml",
+    "artifacts": "artifacts",
+    "configData": "data/config",
+    "configDataSchema": "data/config/ConfigData.Schema.xml"
+  },
+
+  "export": {
+    "$comment": "packagetype Both unpacks managed and unmanaged from one export, which keeps the two in step in source control.",
+    "packageType": "Both",
+    "includeSettings": "general"
+  },
+
+  "import": {
+    "$comment": "publishChanges applies to unmanaged imports. stageAndUpgrade is the managed upgrade path.",
+    "publishChanges": true,
+    "activatePlugins": true,
+    "maxAsyncWaitMinutes": 60
+  }
+}
