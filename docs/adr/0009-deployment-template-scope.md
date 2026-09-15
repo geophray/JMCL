@@ -31,14 +31,31 @@ exactly those without it.
 
 ## Deliberately not carried forward yet, in priority order
 
-1. ~~Solution XML normalization.~~ **Done.**
+1. ~~Solution XML normalization.~~ **Done, deliberately narrow.**
    `scripts/Normalize-SolutionXml.ps1` with `settings/normalization.json`.
-   Written from the problem rather than ported, and deliberately an allowlist:
-   form layout, ribbon and sitemap ordering are positional, so a
-   sort-everything normalizer would silently change behaviour or break import.
-   The algorithm was validated against a synthetic export covering sorted
-   containers, a protected `FormXml` region, and a second pass proving
-   idempotency. `-Verify` makes it assertable in CI.
+
+   The first cut had ten rules using `//` wildcards across every XML file in
+   the solution. That was a generalization of a narrow, proven tool into a
+   broad, unproven one, on a format with no real example in hand. It is now
+   **three absolute XPaths**, matching the only containers known to be
+   order-insensitive in practice:
+
+   ```
+   /ImportExportXml/SolutionManifest/MissingDependencies
+   /EntityRelationships
+   /Entity/EntityInfo/entity/attributes
+   ```
+
+   Absolute paths are the safety property: a rule fires only on a document
+   whose root element matches, so it cannot stray into a similarly-named
+   element elsewhere. `neverDescendInto` guards positional regions as a second
+   line of defence.
+
+   Validated against synthetic documents covering all three root shapes, a
+   decoy document with a matching element under a different root, an
+   `attributes` block nested inside `FormXml`, and a second pass proving
+   idempotency. The decoy and the `FormXml` block were both left untouched.
+   `-Verify` makes it assertable in CI.
 
 2. **Multiple solutions per repository, with import ordering.** This template
    assumes one solution. Real repositories carry several, and dependency
@@ -69,9 +86,7 @@ Ship the single-solution round trip with normalization now. Treat multiple
 solutions and the configuration/test data split as required before this
 template is used on a real project.
 
-Normalization's allowlist is a hypothesis until a real export exercises it. The
-rule set was written from knowledge of the format, not from a solution in hand,
-so the first real round trip should confirm two things: that the listed
-containers actually appear with the expected keys, and that the solution still
-imports after normalization. Until then, treat `settings/normalization.json` as
-a starting point rather than a verified configuration.
+The three rules are narrow enough to be low risk, but the first real round trip
+should still confirm that the containers appear with the expected keys and that
+the solution imports afterwards. Add a fourth rule only with that same evidence
+in hand, never because a container looks sortable.

@@ -8,11 +8,16 @@
     makes "review the diff before committing" advice nobody can follow, and it
     removes most of the value of source-controlling a solution at all.
 
-    This sorts the children of an ALLOWLIST of containers, configured in
-    settings/normalization.json. The allowlist matters: some solution XML
-    ordering is positional and meaningful. Form layout, ribbon definitions and
-    sitemap ordering all change behaviour if reordered. Anything not named in
-    the configuration is left exactly as exported.
+    This sorts the children of a deliberately small allowlist of containers,
+    configured in settings/normalization.json. Three rules, all absolute
+    XPaths rooted at the document element, which is the main safety property:
+    a rule only fires on a document whose root matches, so it cannot stray into
+    a similarly-named element elsewhere.
+
+    The allowlist matters because some solution XML ordering is positional and
+    meaningful. Form layout, ribbon definitions and sitemap ordering all change
+    behaviour if reordered. Anything not named in the configuration is left
+    exactly as exported.
 
     Whitespace is preserved. Element children are reordered within the slots
     they already occupy, so indentation and line endings survive and the diff
@@ -65,13 +70,14 @@ function Get-SortKey {
     param($Element, [string[]] $Keys)
 
     foreach ($key in $Keys) {
-        if ($key.StartsWith('@')) {
-            $value = $Element.GetAttribute($key.Substring(1))
-        }
-        else {
-            $child = $Element.SelectSingleNode($key)
-            $value = if ($child) { $child.InnerText } else { $null }
-        }
+        # Evaluated as XPath relative to the element, so '@Name' and
+        # 'Required/@schemaName' both work. Attribute results carry their text
+        # in Value; element results in InnerText.
+        $node = $Element.SelectSingleNode($key)
+        $value = if ($null -eq $node) { $null }
+                 elseif ($node.NodeType -eq 'Attribute') { $node.Value }
+                 else { $node.InnerText }
+
         if (-not [string]::IsNullOrWhiteSpace($value)) {
             # Lowercase so ordering does not depend on how the platform cased
             # a name this time.

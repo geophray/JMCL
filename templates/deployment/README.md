@@ -90,15 +90,25 @@ unpack. You can also run it directly, and CI can assert it:
 ./scripts/Normalize-SolutionXml.ps1 -Verify    # exit non-zero if not normalized
 ```
 
-**It sorts an allowlist, never everything.** Some solution XML ordering is
-positional and meaningful: form layout, ribbon definitions and sitemap ordering
-all change behaviour if reordered. `settings/normalization.json` names the
-containers that may be sorted and the keys to sort them by, and lists regions
-the normalizer will not descend into even when a rule matches inside them.
-Anything unlisted is left exactly as exported.
+**Three rules, and they are absolute XPaths.** That is the safety property:
+a rule fires only on a document whose root element matches, so
+`/Entity/EntityInfo/entity/attributes` cannot stray into an `attributes`
+element in some other document the way a `//attributes` wildcard would.
 
-Add rules cautiously, and confirm with a round trip against a real environment
-that the solution still imports before trusting a new one.
+```
+/ImportExportXml/SolutionManifest/MissingDependencies   sort MissingDependency
+/EntityRelationships                                    sort EntityRelationship
+/Entity/EntityInfo/entity/attributes                    sort attribute
+```
+
+Everything else is left exactly as exported, including things that merely look
+sortable. Some solution XML ordering is positional: form layout, ribbon
+definitions and sitemap ordering all change behaviour if reordered, and
+`neverDescendInto` guards those regions as a second line of defence.
+
+**Adding a rule is a real decision, not a configuration tweak.** Confirm
+against a real export that the container exists with the expected keys, then
+confirm with a round trip that the solution still imports.
 
 ## Choices worth knowing
 

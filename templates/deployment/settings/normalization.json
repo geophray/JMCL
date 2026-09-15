@@ -2,37 +2,49 @@
   "$comment": [
     "Which XML containers may have their child elements sorted, and by what key.",
     "",
-    "This is an ALLOWLIST on purpose. Dataverse exports some collections in a",
-    "non-deterministic order (harmless to sort) and others in a meaningful one",
-    "(destructive to sort). Form layout, ribbon definitions and sitemap ordering",
-    "are positional: sorting them changes what the user sees, or breaks import.",
-    "Anything not listed here is left exactly as exported.",
+    "Deliberately small. These three are the only containers known to be",
+    "order-insensitive in practice. Everything else is left exactly as exported,",
+    "including anything that merely looks sortable.",
     "",
-    "container : XPath selecting the parent element whose children get sorted.",
+    "The XPaths are ABSOLUTE, rooted at the document element. That is the main",
+    "safety property: /Entity/EntityInfo/entity/attributes cannot accidentally",
+    "match an 'attributes' element somewhere else in a different document, the",
+    "way a '//attributes' wildcard would. A rule only fires on a document whose",
+    "root element matches.",
+    "",
+    "container : absolute XPath selecting the parent whose children get sorted.",
     "child     : element name to sort. Other children are left in place.",
-    "keys      : ordered list of sort keys, tried in order. A key is either",
-    "            '@attribute' or a child element name. Elements missing every",
-    "            key sort by their own XML, which is stable but arbitrary.",
+    "keys      : ordered XPaths relative to each child, tried in order.",
+    "            Attributes ('@Name') and nested paths ('Required/@schemaName')",
+    "            both work. A child matching no key sorts by its own XML, which",
+    "            is arbitrary but stable, so the result stays deterministic.",
     "",
-    "Add rules cautiously, and confirm with a round trip against a real",
-    "environment that the solution still imports before trusting a new one."
+    "Adding a rule is a real decision, not a configuration tweak. Confirm",
+    "against a real export that the container exists with the expected keys,",
+    "then confirm with a round trip that the solution still imports. Form",
+    "layout, ribbon definitions and sitemap ordering are positional: sorting",
+    "them changes behaviour or breaks import."
   ],
 
   "neverDescendInto": [
-    "FormXml", "RibbonDiffXml", "SiteMapXml", "RibbonXml",
-    "IntroducedVersion", "ClientRibbonDiffXml"
+    "FormXml", "RibbonDiffXml", "SiteMapXml", "RibbonXml", "ClientRibbonDiffXml"
   ],
 
   "rules": [
-    { "container": "//Entities",           "child": "Entity",             "keys": ["Name"] },
-    { "container": "//attributes",          "child": "attribute",          "keys": ["@PhysicalName", "Name"] },
-    { "container": "//EntityRelationships", "child": "EntityRelationship", "keys": ["@Name", "Name"] },
-    { "container": "//OptionSets",          "child": "optionset",          "keys": ["@Name", "@localizedName"] },
-    { "container": "//Roles",               "child": "Role",               "keys": ["@name", "@id"] },
-    { "container": "//Workflows",           "child": "Workflow",           "keys": ["@Name", "@WorkflowId"] },
-    { "container": "//WebResources",        "child": "WebResource",        "keys": ["Name", "@Name"] },
-    { "container": "//SavedQueries",        "child": "savedquery",         "keys": ["savedqueryid", "@savedqueryid"] },
-    { "container": "//RootComponents",      "child": "RootComponent",      "keys": ["@schemaName", "@id"] },
-    { "container": "//MissingDependencies", "child": "MissingDependency",  "keys": ["@schemaName", "@id"] }
+    {
+      "container": "/ImportExportXml/SolutionManifest/MissingDependencies",
+      "child": "MissingDependency",
+      "keys": ["Required/@schemaName", "Required/@key", "Required/@type"]
+    },
+    {
+      "container": "/EntityRelationships",
+      "child": "EntityRelationship",
+      "keys": ["@Name", "EntityRelationshipName"]
+    },
+    {
+      "container": "/Entity/EntityInfo/entity/attributes",
+      "child": "attribute",
+      "keys": ["@PhysicalName", "Name"]
+    }
   ]
 }
