@@ -36,10 +36,10 @@ $zipManaged = Join-Path $artifacts "$($settings.solutionName)_managed.zip"
 
 Write-Host "Exporting $($settings.solutionName) from $Environment." -ForegroundColor Cyan
 
-Invoke-Pac solution export --name $settings.solutionName --path $zip `
+Invoke-Pac -Produces $zip solution export --name $settings.solutionName --path $zip `
     --environment $url --include $settings.export.includeSettings --overwrite
 
-Invoke-Pac solution export --name $settings.solutionName --path $zipManaged `
+Invoke-Pac -Produces $zipManaged solution export --name $settings.solutionName --path $zipManaged `
     --environment $url --include $settings.export.includeSettings --managed --overwrite
 
 # Unpack unmanaged and managed into one tree. --allowDelete lets components

@@ -64,13 +64,25 @@ function Invoke-Pac {
         a non-zero exit code from a native command, so without this check a
         failed export would sail on and the next step would operate on a stale
         or missing file.
+
+        -Produces goes further: assert the artifact actually appeared. A zero
+        exit code is not evidence that anything was written. This framework has
+        already been bitten once by a pack step that reported success eighteen
+        times while producing no packages, and the failure only surfaced two
+        steps later pointing at the wrong component.
     #>
-    param([Parameter(Mandatory, ValueFromRemainingArguments)][string[]] $Arguments)
+    param(
+        [string] $Produces,
+        [Parameter(Mandatory, ValueFromRemainingArguments)][string[]] $Arguments
+    )
 
     Write-Host "pac $($Arguments -join ' ')" -ForegroundColor DarkGray
     & pac @Arguments
     if ($LASTEXITCODE -ne 0) {
         throw "pac $($Arguments -join ' ') failed with exit code $LASTEXITCODE"
+    }
+    if ($Produces -and -not (Test-Path $Produces)) {
+        throw "pac reported success but did not produce '$Produces'. Treat this as a failure."
     }
 }
 

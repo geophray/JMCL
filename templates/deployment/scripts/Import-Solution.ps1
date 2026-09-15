@@ -44,10 +44,18 @@ $type = if ($Managed) { 'Managed' } else { 'Unmanaged' }
 $zip  = Join-Path $artifacts "$($settings.solutionName)_$($type.ToLower()).zip"
 
 Write-Host "Packing $type from $source." -ForegroundColor Cyan
-$pack = @('solution', 'pack', '--zipfile', $zip, '--folder', $source, '--packagetype', $type)
+$pack = @(
+    'solution', 'pack',
+    '--zipfile', $zip,
+    '--folder', $source,
+    '--packagetype', $type,
+    # Some components unpack with only an unmanaged XML file. Without this,
+    # packing Managed fails on exactly those components.
+    '--useUnmanagedFileForMissingManaged'
+)
 $mapping = Join-Path $root $settings.paths.mappingFile
 if (Test-Path $mapping) { $pack += @('--map', $mapping) }
-Invoke-Pac @pack
+Invoke-Pac -Produces $zip @pack
 
 Write-Host "Importing to $Environment." -ForegroundColor Cyan
 $import = @(

@@ -14,7 +14,14 @@ No ADAL, no `Adoxio.Dynamics.DevOps`, no `Microsoft.Xrm.Data.PowerShell`, no
 ADAL left support in December 2022 and the PowerShell modules built on it have
 had no release since November 2022, so there is no newer version to move to.
 Package Deployer exists to bundle solutions and data into a compiled package;
-once both move through `pac`, it has no job. Reasoning is recorded in
+once both move through `pac`, it has no job.
+
+**That last claim is scope-dependent and worth stating honestly.** A prior
+migration of a large estate could not eliminate Package Deployer, because two
+operations have no `pac` equivalent: importing document templates, and
+resetting an environment. If a solution needs either, Package Deployer or a
+compiled cmdlet comes back. This template drops it because nothing here needs
+those operations yet, not because they have gone away. Reasoning is recorded in
 `docs/adr/0007-pac-first-tooling.md` in the framework repository.
 
 ## Prerequisites
