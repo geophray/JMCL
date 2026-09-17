@@ -39,11 +39,12 @@ Not yet published anywhere. CI is configured to publish tagged releases to
 nuget.org (see [Packaging](#packaging)), but no version has been tagged, so
 nothing is live there today.
 
-Deliberately not converted in this pass: `Dataverse.ProxyGenerator` and
-`Dataverse.DevOps.PowerShell` (tooling carrying dependencies that need
-decisions, not just conversion) and `Dataverse.Testing` (needs
-re-platforming off its current test harness). None of the 18 components
-above depend on them.
+Three components remain outside the 18 above: `Dataverse.Testing` (needs
+re-platforming off its current test harness), and `Dataverse.ProxyGenerator`
+and `Dataverse.DevOps.PowerShell`, both in scope and actively being ported
+rather than deferred (see open PRs for status). `Dataverse.ProxyGenerator`'s
+authentication is being modernized from ADAL to MSAL as part of that port.
+None of the 18 components above depend on any of the three.
 
 ## Layout
 
@@ -92,9 +93,13 @@ dotnet pack -c Release -o local-feed
 
 For releases: pushing a `v*` tag to `main` runs the `publish` job in
 [ci.yml](.github/workflows/ci.yml), which packs and pushes every package to
-nuget.org. That job needs a `NUGET_API_KEY` secret configured in a GitHub
-Environment named `nuget` on this repository; nothing publishes until that is
-set up. Versions come from the tag itself via MinVer — see
+nuget.org. Publishing uses nuget.org's trusted publishing (OIDC) rather than a
+stored API key: the job exchanges a short-lived GitHub Actions token for a
+one-hour nuget.org key, gated on a trusted publishing policy scoped to
+`JMCL.*` and a GitHub Environment named `nuget`. That environment needs a
+`NUGET_USER` variable (the nuget.org profile name to authenticate as)
+configured, and nothing publishes until the trusted publishing policy also
+exists on nuget.org. Versions come from the tag itself via MinVer — see
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Strong naming
