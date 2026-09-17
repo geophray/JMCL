@@ -19,18 +19,42 @@ Not affiliated with or endorsed by Colson Code, LLC.
 
 ## Status
 
-Early. Phase 1 of the fork is in progress. Only `JMCL.Core.IocContainer` has
-been converted so far. Nothing here is published to a public feed.
+All 18 runtime components have been forked, converted to SDK-style projects
+and build cleanly: `dotnet build` succeeds with 0 errors, and 10 of the 18
+multi-target `net462` plus `net10.0` while the remaining 8 Dataverse
+components are `net462` only. Roughly 350 files and 20,000 lines of
+production source, excluding tests, generated proxies and build output.
+
+Two things are still open before this is proven end to end, and both are
+tracked rather than blocking:
+
+- **No sample plugin has been registered and run in a live Dataverse
+  environment yet.** Everything so far is verified by `dotnet build` and
+  `dotnet test`; nothing has executed inside Dataverse.
+- **Test coverage is minimal.** Only `JMCL.Core.IocContainer` has tests (3
+  test methods). The other 17 components, including `Dataverse.Sdk` and
+  `Telemetry`, have none yet.
+
+Not yet published anywhere. CI is configured to publish tagged releases to
+nuget.org (see [Packaging](#packaging)), but no version has been tagged, so
+nothing is live there today.
+
+Deliberately not converted in this pass: `Dataverse.ProxyGenerator` and
+`Dataverse.DevOps.PowerShell` (tooling carrying dependencies that need
+decisions, not just conversion) and `Dataverse.Testing` (needs
+re-platforming off its current test harness). None of the 18 components
+above depend on them.
 
 ## Layout
 
 ```
-src/        runtime libraries
+src/        runtime libraries, one project per component
 tests/      unit tests, one project per library
-tools/      build-time and deploy-time tooling (proxy generator, PowerShell)
-build/      shared MSBuild props, packaging, signing key location
+samples/    sample consumers used to verify packaging end to end
+build/      shared MSBuild props, packaging scripts, signing key location
 docs/adr/   architecture decision records
-upstream/   vendor branch pins of the unmodified upstream
+upstream/   reserved for vendor branch pins of the unmodified upstream;
+            not yet populated
 ```
 
 ## Building
@@ -58,12 +82,20 @@ CI runs both target frameworks on a Windows agent. See
 
 ## Packaging
 
+For local development:
+
 ```bash
 dotnet pack -c Release -o local-feed
 ```
 
-`local-feed` is a folder feed registered in `NuGet.config`, used while the
-package identities are still settling. No public feed yet.
+`local-feed` is a folder feed registered in `NuGet.config`.
+
+For releases: pushing a `v*` tag to `main` runs the `publish` job in
+[ci.yml](.github/workflows/ci.yml), which packs and pushes every package to
+nuget.org. That job needs a `NUGET_API_KEY` secret configured in a GitHub
+Environment named `nuget` on this repository; nothing publishes until that is
+set up. Versions come from the tag itself via MinVer — see
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Strong naming
 
