@@ -56,12 +56,18 @@ jobs:
       id-token: write
 
     steps:
+      - uses: actions/checkout@v4
+        # Needed only so setup-dotnet below has a global.json to pin against;
+        # the packages themselves already came from the verify job's artifact.
+
       - uses: actions/download-artifact@v4
         with:
           name: packages
           path: local-feed
 
       - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
 
       - name: NuGet login (OIDC)
         uses: NuGet/login@v1
@@ -78,8 +84,23 @@ jobs:
         # true, which silently accepted a re-push of an existing version and hid
         # mistakes. A duplicate here should fail loudly, and so should a missing
         # or misconfigured trusted publishing policy rather than a silent skip.
+        #
+        # dotnet nuget push's own wildcard handling is unreliable under Git Bash
+        # on Windows -- a forward-slash glob like "local-feed/*.nupkg" silently
+        # fails to resolve and reports "File does not exist" even though the
+        # files are present (a known NuGet CLI issue, not specific to this repo).
+        # Bash expands the glob instead, and each package is pushed individually.
         shell: bash
         run: |
-          dotnet nuget push "local-feed/*.nupkg" \
-            --source https://api.nuget.org/v3/index.json \
-            --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
+          shopt -s nullglob
+          packages=(local-feed/*.nupkg)
+          if [[ ${#packages[@]} -eq 0 ]]; then
+            echo "::error::No .nupkg files found in local-feed/ to push."
+            exit 1
+          fi
+          for pkg in "${packages[@]}"; do
+            echo "Pushing ${pkg}..."
+            dotnet nuget push "${pkg}" \
+              --source https://api.nuget.org/v3/index.json \
+              --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
+          done
