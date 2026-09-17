@@ -46,6 +46,14 @@ jobs:
     needs: verify
     runs-on: windows-latest
     environment: nuget
+    permissions:
+      contents: read
+      # Required for nuget.org trusted publishing: this job exchanges a
+      # short-lived GitHub OIDC token for a temporary (1-hour) nuget.org API
+      # key. Nothing long-lived is stored as a secret. The trusted publishing
+      # policy on nuget.org must name this repo, this workflow file
+      # (ci.yml), and the "nuget" environment, or the exchange is refused.
+      id-token: write
 
     steps:
       - uses: actions/download-artifact@v4
@@ -55,23 +63,23 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
 
+      - name: NuGet login (OIDC)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          # nuget.org profile name, not email. Not a secret, but kept as a
+          # repo/environment variable rather than hardcoded so it can change
+          # without a code edit. Set it under Settings > Environments >
+          # nuget > Variables (or repo-level Variables) as NUGET_USER.
+          user: ${{ vars.NUGET_USER }}
+
       - name: Push to nuget.org
         # No --skip-duplicate. The upstream pipelines set allowPackageConflicts
         # true, which silently accepted a re-push of an existing version and hid
-        # mistakes. A duplicate here should fail loudly.
-        #
-        # The feed is still an open decision, so a tag can legitimately exist
-        # before anywhere to publish does. Refuse clearly rather than failing
-        # with an auth error that reads like a broken pipeline.
+        # mistakes. A duplicate here should fail loudly, and so should a missing
+        # or misconfigured trusted publishing policy rather than a silent skip.
         shell: bash
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
-          if [[ -z "${NUGET_API_KEY}" ]]; then
-            echo "::error::No NUGET_API_KEY secret is configured, so this tag cannot publish."
-            echo "Set the secret, or delete the tag if it was not meant to release."
-            exit 1
-          fi
           dotnet nuget push "local-feed/*.nupkg" \
             --source https://api.nuget.org/v3/index.json \
-            --api-key "${NUGET_API_KEY}"
+            --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
