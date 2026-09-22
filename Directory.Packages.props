@@ -26,6 +26,18 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
+  <ItemGroup Label="ProxyGenerator">
+    <!--
+      Dataverse.ProxyGenerator port (11.1a). Chosen without nuget.org feed
+      access from this environment (11.3) -- verify these are still current
+      before the first publish, the same as every other pin in this file.
+    -->
+    <PackageVersion Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.2.20" />
+    <PackageVersion Include="CmdLine" Version="1.0.7.509" />
+    <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="3.1.4" />
+    <PackageVersion Include="Mono.TextTemplating" Version="2.0.5" />
+  </ItemGroup>
+
   <ItemGroup Label="Portable shims">
     <!--
       In-box on .NET Framework, a package on modern .NET. Referenced only on

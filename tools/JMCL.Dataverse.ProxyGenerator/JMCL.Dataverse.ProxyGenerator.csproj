@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <RootNamespace>JMCL.Dataverse.ProxyGenerator</RootNamespace>
+    <AssemblyName>JMCL.Dataverse.ProxyGenerator</AssemblyName>
+    <PackageId>JMCL.Dataverse.ProxyGenerator</PackageId>
+    <Title>JMCL.Dataverse.ProxyGenerator</Title>
+    <Description>T4-based early-bound proxy generator for Dataverse. Reads entity, option set and message metadata and drives a T4 template to produce EntityProxy-derived classes, the shape JMCL.Dataverse.Data's fluent query builder depends on.</Description>
+    <PackageTags>dataverse;powerplatform;codegen;t4;earlybound</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JMCL.Dataverse.Metadata\JMCL.Dataverse.Metadata.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+    <PackageReference Include="Mono.TextTemplating" />
+  </ItemGroup>
+
+</Project>

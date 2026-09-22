@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>JMCL.Dataverse.ProxyGenerator.Cmd</RootNamespace>
+    <AssemblyName>jmcl-proxybuilder</AssemblyName>
+    <!--
+      Console tool, not a library: nothing to pack as a class library package.
+      It ships as a .NET tool instead -- see the packaging note in fork-plan.md
+      11.1a once that's settled.
+    -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JMCL.Dataverse.ProxyGenerator\JMCL.Dataverse.ProxyGenerator.csproj" />
+    <ProjectReference Include="..\..\src\JMCL.Dataverse.Metadata\JMCL.Dataverse.Metadata.csproj" />
+    <ProjectReference Include="..\..\src\JMCL.Core.IocContainer\JMCL.Core.IocContainer.csproj" />
+    <ProjectReference Include="..\..\src\JMCL.Core.ProcessModel\JMCL.Core.ProcessModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CmdLine" />
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
+    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" />
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+
+</Project>
