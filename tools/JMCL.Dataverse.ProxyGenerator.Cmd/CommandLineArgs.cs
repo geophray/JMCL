@@ -1,6 +1,6 @@
 using CmdLine;
 
-[CommandLineArguments(Program = "jmcl-proxybuilder", Title = "JMCL Dataverse Proxy Builder", Description = "Create Dataverse early-bound proxies using T4 templates.")]
+[CommandLineArguments(Program = "proxybuilder", Title = "JMCL Dataverse Proxy Builder", Description = "Create Dataverse early-bound proxies using T4 templates.")]
 public class CommandLineArgs
 {
     [CommandLineParameter(Command = "?", Default = false, Description = "Show Help", Name = "Help", IsHelp = true)]

@@ -166,7 +166,8 @@ namespace JMCL.Dataverse.ProxyGenerator.Cmd
             do
             {
                 Console.Write(prompt + ": ");
-                string input = Console.ReadLine();
+                string input = Console.ReadLine()
+                    ?? throw new InvalidOperationException("No interactive input is available. Pass a connection string with /c for non-interactive runs.");
                 if (input.Length > 0)
                 {
                     if (regex != null && Regex.IsMatch(input, regex))

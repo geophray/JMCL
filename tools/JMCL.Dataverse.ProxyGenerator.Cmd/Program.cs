@@ -20,6 +20,8 @@ class Program
 {
     private static IReadOnlyIocContainer Container;
 
+    // STA: MSAL's embedded interactive login on .NET Framework requires it.
+    [STAThread]
     static void Main(string[] args)
     {
         Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -40,7 +42,7 @@ class Program
         catch (CommandLineException exception)
         {
             Console.WriteLine(exception.ArgumentHelp.Message);
-            Console.WriteLine(exception.ArgumentHelp.GetHelpText(Console.BufferWidth));
+            Console.WriteLine(exception.ArgumentHelp.GetHelpText(HelpWidth));
         }
         catch (FaultException<OrganizationServiceFault> ex)
         {
@@ -152,10 +154,12 @@ class Program
             if (arguments.Connection == null)
             {
                 var connection = new DataverseClientConnection();
-                var client = connection.Connect();
-                arguments.Connection = connection.ConnectionString;
+                using (var client = connection.Connect())
+                {
+                    arguments.Connection = connection.ConnectionString;
 
-                BuildProxy(client, searchPath);
+                    BuildProxy(client, searchPath);
+                }
             }
             else
             {
@@ -184,10 +188,13 @@ class Program
         catch (CommandLineException exception)
         {
             Console.WriteLine(exception.ArgumentHelp.Message);
-            Console.WriteLine(exception.ArgumentHelp.GetHelpText(Console.BufferWidth));
+            Console.WriteLine(exception.ArgumentHelp.GetHelpText(HelpWidth));
         }
 
     }
+
+    // Console.BufferWidth throws when output is redirected (CI, piping to a file).
+    private static int HelpWidth => Console.IsOutputRedirected ? 80 : Console.BufferWidth;
 
     public static string ReadPassword(char mask)
     {

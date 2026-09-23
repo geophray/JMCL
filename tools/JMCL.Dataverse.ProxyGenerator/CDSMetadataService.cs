@@ -9,7 +9,6 @@ namespace JMCL.Dataverse.ProxyGenerator
 { 
     using JMCL.Dataverse.Sdk.Metadata;
     using JMCL.Core;
-    using System.Windows.Controls.Primitives;
 
     public class CDSMetadataService : MessagingBase, ICDSMetadataService
     {

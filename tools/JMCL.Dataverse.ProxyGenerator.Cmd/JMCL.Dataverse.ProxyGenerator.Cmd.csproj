@@ -4,13 +4,37 @@
     <TargetFrameworks>$(PluginTargetFramework)</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>JMCL.Dataverse.ProxyGenerator.Cmd</RootNamespace>
-    <AssemblyName>jmcl-proxybuilder</AssemblyName>
     <!--
-      Console tool, not a library: nothing to pack as a class library package.
-      It ships as a .NET tool instead -- see the packaging note in fork-plan.md
-      11.1a once that's settled.
+      proxybuilder.exe, the same name CCLLC.CDS.ProxyBuilder shipped, so the
+      codgen\proxybuilder.bat already committed in consumer solutions (which
+      searches the solution-local packages\ folder for proxybuilder.exe) works
+      unchanged after swapping the PackageReference.
     -->
-    <IsPackable>false</IsPackable>
+    <AssemblyName>proxybuilder</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Packaging">
+    <!--
+      Packed in the same shape as CCLLC.CDS.ProxyBuilder: the exe and every
+      dependency loose under tools\, the template, config and batch file under
+      content\, no lib\ and no NuGet dependencies. Consumers never compile
+      against it; they restore it and run it.
+    -->
+    <PackageId>JMCL.Dataverse.ProxyBuilder</PackageId>
+    <Title>JMCL.Dataverse.ProxyBuilder</Title>
+    <Description>Command line tool that generates Dataverse early-bound proxy classes from T4 templates. Drop-in replacement for CCLLC.CDS.ProxyBuilder, connecting via Microsoft.PowerPlatform.Dataverse.Client (MSAL) instead of ADAL.</Description>
+    <PackageTags>dataverse;powerplatform;codegen;t4;earlybound;proxy</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- No lib\ assemblies, so there is nothing for a symbol package to hold. -->
+    <IncludeSymbols>false</IncludeSymbols>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackToolsFolder</TargetsForTfmSpecificContentInPackage>
+    <!--
+      NU5100: assemblies outside lib\. Intended: they are the tool's runtime.
+      NU5128: no lib\ assets for the declared framework. Intended, as above.
+    -->
+    <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,5 +51,18 @@
     <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" />
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
+
+  <!--
+    Content is added here rather than as None items with Pack="true": pack
+    collects None items in the outer (multi-targeting) build, where the
+    default item globs are not evaluated, so they would be silently dropped.
+  -->
+  <Target Name="PackToolsFolder">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(TargetDir)**\*" Exclude="$(TargetDir)**\*.xml" PackagePath="tools\%(RecursiveDir)" />
+      <TfmSpecificPackageFile Include="Package\ProxyTemplate.t4;Package\proxies.json" PackagePath="content\" />
+      <TfmSpecificPackageFile Include="Package\proxybuilder.bat" PackagePath="content\codgen\" />
+    </ItemGroup>
+  </Target>
 
 </Project>
