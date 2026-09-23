@@ -37,8 +37,8 @@ python3 build/pack-sources.py --output local-feed --version "${VERSION}"
 ASM="$(ls local-feed/*.nupkg | grep -vc '\.Sources\.')"
 SRC="$(ls local-feed/*.nupkg | grep -c '\.Sources\.')"
 echo "--- produced: ${ASM} assembly, ${SRC} source ---"
-if [[ "${ASM}" -ne 18 || "${SRC}" -ne 18 ]]; then
-  echo "EXPECTED 18 of each. Packing silently produced the wrong set." >&2
+if [[ "${ASM}" -ne 20 || "${SRC}" -ne 18 ]]; then
+  echo "EXPECTED 20 assembly (18 original + JMCL.Dataverse.ProxyGenerator + JMCL.Dataverse.ProxyBuilder) and 18 source. Packing silently produced the wrong set." >&2
   exit 1
 fi
 

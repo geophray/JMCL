@@ -40,11 +40,36 @@ nuget.org (see [Packaging](#packaging)), but no version has been tagged, so
 nothing is live there today.
 
 Three components remain outside the 18 above: `Dataverse.Testing` (needs
-re-platforming off its current test harness), and `Dataverse.ProxyGenerator`
-and `Dataverse.DevOps.PowerShell`, both in scope and actively being ported
-rather than deferred (see open PRs for status). `Dataverse.ProxyGenerator`'s
-authentication is being modernized from ADAL to MSAL as part of that port.
-None of the 18 components above depend on any of the three.
+re-platforming off its current test harness), `Dataverse.DevOps.PowerShell`
+(in scope, being ported), and `Dataverse.ProxyGenerator`, which is ported
+under `tools/` with its authentication moved from ADAL to MSAL (see
+[Proxy generation](#proxy-generation)). None of the 18 components above
+depend on any of the three.
+
+## Proxy generation
+
+`tools/` holds the early-bound proxy generator: `JMCL.Dataverse.ProxyGenerator`
+(the T4 engine) and `JMCL.Dataverse.ProxyGenerator.Cmd`, which packs as
+**`JMCL.Dataverse.ProxyBuilder`**. It is a drop-in replacement for
+`CCLLC.CDS.ProxyBuilder`, with the same package layout (`tools\proxybuilder.exe`,
+plus `ProxyTemplate.t4`, `proxies.json` and `codgen\proxybuilder.bat` under
+`content\`), the same `/s:` search-path argument, the same `proxies.json` /
+`spkl.json` settings, and the same T4 directives. It connects through
+`Microsoft.PowerPlatform.Dataverse.Client` (MSAL). Run it with no `/c:` to get
+an interactive sign-in, with saved connections and a token cache under
+`%APPDATA%\jmcl-proxygen`. Pass `/c:` with any `ServiceClient` connection string
+for client secret, certificate or other non-interactive auth.
+
+To migrate a solution built from the plugin template:
+
+1. Replace the `CCLLC.CDS.ProxyBuilder` PackageReference with
+   `JMCL.Dataverse.ProxyBuilder`. Remove the old one entirely: the batch file
+   runs the first `proxybuilder.exe` it finds under the solution folder.
+2. In the solution's `ProxyTemplate.t4`, change the generated base class from
+   `CCLLC.CDS.Sdk.EarlyBound.EntityProxy` to
+   `JMCL.Dataverse.Sdk.EarlyBound.EntityProxy`.
+
+`codgen\proxybuilder.bat` itself does not change.
 
 ## Layout
 
