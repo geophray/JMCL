@@ -18,7 +18,7 @@ namespace JMCL.Core
 
         public ISettingsProvider CreateSettingsProvider(IProcessExecutionContext executionContext, bool useCache = true)
         {
-            if(useCache && executionContext.Cache != null && executionContext.Cache.Exists(CACHE_KEY))
+            if (useCache && executionContext.Cache != null && executionContext.Cache.Exists(CACHE_KEY))
             {
                 var cachedSettings = executionContext.Cache.Get<Dictionary<string, string>>(CACHE_KEY);
                 return new SettingsProvider(cachedSettings);
