@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JMCL.Core
 {
@@ -18,7 +20,8 @@ namespace JMCL.Core
         {
             if(useCache && executionContext.Cache != null && executionContext.Cache.Exists(CACHE_KEY))
             {
-                return executionContext.Cache.Get<ISettingsProvider>(CACHE_KEY);
+                var cachedSettings = executionContext.Cache.Get<Dictionary<string, string>>(CACHE_KEY);
+                return new SettingsProvider(cachedSettings);
             }
 
             var settings = DataConnector.LoadSettings(executionContext.DataService);
@@ -31,7 +34,7 @@ namespace JMCL.Core
 
                 if (cacheTimeout != null && cacheTimeout.Value.Ticks != 0)
                 {
-                    executionContext.Cache.Add<ISettingsProvider>(CACHE_KEY, settingsProvider, cacheTimeout.Value);
+                    executionContext.Cache.Add<Dictionary<string, string>>(CACHE_KEY, settings.ToDictionary(kvp => kvp.Key, kvp => kvp.Value), cacheTimeout.Value);
                 }
             }
 
