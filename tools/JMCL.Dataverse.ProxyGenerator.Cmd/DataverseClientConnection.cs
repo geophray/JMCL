@@ -46,7 +46,7 @@ namespace JMCL.Dataverse.ProxyGenerator.Cmd
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Office365 Login");
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Note:  pass an explicit connection string via -c for on-premises, AD, or a non-interactive login");
+            Console.WriteLine("Note:  pass an explicit connection string via /c:\"<connection string>\" for on-premises, AD, or a non-interactive login");
             Console.ForegroundColor = ConsoleColor.Gray;
 
             // Microsoft's published public-client sample app registration, the same one
