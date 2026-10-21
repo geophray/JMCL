@@ -60,16 +60,31 @@ an interactive sign-in, with saved connections and a token cache under
 `%APPDATA%\jmcl-proxygen`. Pass `/c:` with any `ServiceClient` connection string
 for client secret, certificate or other non-interactive auth.
 
+`codgen\proxybuilder.bat` passes any arguments through to `proxybuilder.exe`, so a
+connection string can go straight on the batch file. Quote the whole value,
+since cmd and PowerShell both split on semicolons:
+
+```bat
+proxybuilder.bat "/c:AuthType=ClientSecret;Url=https://org.crm.dynamics.com;ClientId=...;ClientSecret=..."
+```
+
+The batch file looks for `proxybuilder.exe` under the solution folder first
+(`packages.config` restores), then in the global NuGet cache (`%NUGET_PACKAGES%`,
+or `%USERPROFILE%\.nuget\packages`) for `PackageReference` restores.
+
 To migrate a solution built from the plugin template:
 
 1. Replace the `CCLLC.CDS.ProxyBuilder` PackageReference with
    `JMCL.Dataverse.ProxyBuilder`. Remove the old one entirely: the batch file
-   runs the first `proxybuilder.exe` it finds under the solution folder.
+   runs the first `proxybuilder.exe` it finds under the solution folder before
+   falling back to the global NuGet cache.
 2. In the solution's `ProxyTemplate.t4`, change the generated base class from
    `CCLLC.CDS.Sdk.EarlyBound.EntityProxy` to
    `JMCL.Dataverse.Sdk.EarlyBound.EntityProxy`.
 
-`codgen\proxybuilder.bat` itself does not change.
+An existing `codgen\proxybuilder.bat` keeps working for `packages.config`
+solutions. To pass `/c:` through, or to run from a `PackageReference` solution,
+copy the updated batch file from the package's `content\codgen\` folder.
 
 ## Layout
 
